@@ -86,9 +86,9 @@ button:hover{
     cursor: pointer;
 }
 
-.norton_image{
-    /* background-image: url('../assets/norton.png'); */
-}
+/* .norton_image{
+    background-image: url('../assets/norton.png');
+} */
 
 .image{
     width: 100%;

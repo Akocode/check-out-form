@@ -1,7 +1,10 @@
 <template>
 <div class="container">
   <h1 class="checkout">Checkout</h1>
-  <h5 class="checkout_message">You are checking out as a guest with email email.this@email.com <a href="" class="message_link">Edit this</a></h5>
+  <h5 class="checkout_message">You are checking out as a guest with the email
+     <b v-bind="email"> {{state.email}} </b>
+    <a href="" class="message_link" @click.prevent="editMail">Edit this</a>
+  </h5>
   <div class="another_container">
     <div class="details">
       <Details />
@@ -11,9 +14,13 @@
     </div>
   </div>
 </div>
+<button type="button" class="btn" @click="showModal"> Open Modal! </button>
+<Modal v-show="state.isModalVisible" @close="closeModal" @save="saveModal"/>
 </template>
 
 <script>
+import { reactive } from 'vue';
+import Modal from './components/Modal';
 import Details from './components/Details';
 import Summary from './components/Summary';
 export default {
@@ -21,6 +28,43 @@ export default {
   components: {
     Details,
     Summary,
+    Modal,
+  },
+  setup(){
+    const state = reactive({
+      email: ' email.this@email.com ',
+      isModalVisible: false,
+    });
+
+    function editMail(){
+      var mail = prompt('Provide the new mail');
+      if (mail.includes("@") && mail.includes(".com")) {
+        state.email = mail;
+      } else{
+        alert("invalid email");
+      }
+    }
+
+    function showModal(){
+      state.isModalVisible = true;
+    }
+
+    function closeModal(){
+      state.isModalVisible = false;
+    }
+
+    function saveModal(){
+      alert("thank you");
+      state.isModalVisible = false;
+    }
+
+    return{
+      state,
+      editMail,
+      showModal,
+      closeModal,
+      saveModal,
+    }
   }
 }
 </script>
@@ -52,6 +96,10 @@ body {
   /* font-family: 'montserrat', sans-serif; */
   /* min-height: 100vh; */
   
+}
+
+b{
+  font-weight: 1000;
 }
 
 .another_container{

@@ -17,7 +17,7 @@
         <div class="delivery">
             <h2>Delivery</h2>
             <div class="deliver_uk">
-                <h4><i class="fas fa-check-circle"></i>Deliver to an address in United Kingdom</h4>
+                <h4 id="delivery_letter"><i class="fas fa-check-circle"></i>Deliver to an address in United Kingdom</h4>
                 <a href="">EDIT THIS</a>
             </div>
             <h4>Enter the recipent's details</h4>
@@ -27,27 +27,33 @@
                 </option>
             </select>
             <div class="name">
-                <input type="text" placeholder="First Name">
-                <input type="text" placeholder="Last Name">
+                <input type="text" placeholder="First Name" v-model="state.first_name">
+                <input type="text" placeholder="Last Name" v-model="state.last_name">
             </div>
             <div class="address">
-                <input type="text" placeholder="City" id="address_text">
-                <input type="text" placeholder="Postcode" id="address_text">
-                <button>FIND ADDRESS</button>
+                <input type="text" placeholder="Input Your Address/Postcode" id="address_text" v-model="state.postcode">
+                <select id="title" v-if="state.postCodeSearched" v-model="state.selectedAddress" v-on:change="emitAddress">
+                    <option value="" selected>Please select</option>
+                    <option :value="item.summaryline" v-for="(item, index) in state.addressList" :key="index">
+                        {{item.summaryline}}
+                    </option>
+                </select>
+                <p v-if="state.noResults">Sorry, we were unable to find that post-code</p>
+                <button v-on:click="addressLookUp">FIND ADDRESS</button>
             </div>
             <h4>Or enter it manually here</h4>
-                <div class="address_input">
+                <div class="address_input" v-on:addresschanged="updateAddress">
                     <div class="address_long">
-                        <input type="text" placeholder="Address Line 1">
-                        <input type="text" placeholder="Address Line 2">
+                        <input type="text" placeholder="Address Line 1" v-model="state.line_1" disabled>
+                        <input type="text" placeholder="Address Line 2" v-model="state.line_2" disabled>
                     </div>
                     <div class="address_town">
-                        <input type="text" placeholder="Town/City">
-                        <input type="text" placeholder="Country(optional)">
+                        <input type="text" placeholder="Town/City" v-model="state.city" disabled>
+                        <input type="text" placeholder="Country(optional)" v-model="state.country" disabled>
                     </div>
-                    <input type="text" placeholder="Postcode">
+                    <input type="text" placeholder="Postcode" v-model="state.postal" disabled>
                     <h4 id="question">Enter your contact number <a href=""><i class="fa fa-question-circle" id="question_tag"></i></a></h4>
-                    <input type="text" placeholder="Contact number">
+                    <input type="text" placeholder="Contact number" v-model="state.number">
                 </div>
                 <div class="last_div">
                     <div class="confirm_divbtn">
@@ -63,10 +69,19 @@
 
 <script>
 import { reactive } from 'vue';
+// import {axios} from 'axios';
 export default {
     name: "Details",
-    setup(){
+    setup(ctx){
         const state = reactive({
+            postal: '',
+            first_name: '',
+            last_name: '',
+            line_1: '',
+            line_2: '',
+            city: '',
+            country: '',
+            number: '',
             Selectedtitle: 'Mr',
             Selectedoptions: [
                 {value: 'Mr', name: 'Mr'},
@@ -76,10 +91,53 @@ export default {
                 {value: 'Dr.', name: 'Dr.'},
                 {value: 'Other', name: 'Other'},
             ],
+            isSearching: false,
+            postcode: '',
+            addressList: [],
+            selectedAddress: '',
+            postCodeSearched: false,
+            noResults: false
         });
+
+        function addressLookUp(){
+            // var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            // var targetUrl = `https://api.getAddress.io/find/${state.postcode}?api-key=ndnyWw3hkkCuYMDYtpR4VQ28999`
+            fetch(`https://ws.postcoder.com/pcw/PCWZJ-7426G-4FXY3-VRF33/address/uk/${state.postcode}`)
+                .then(response => { 
+                    state.addressList = response.json()
+                    state.postCodeSearched = true
+                    state.noResults = false
+            })
+            .catch(error => {
+                state.noResults = true
+                console.log(error);
+            })
+        }
+
+        function emitAddress() {
+            if(state.selectedAddress != '') {
+                ctx.$emit('addresschanged', state.selectedAddress)
+            }
+        }
+
+        function updateAddress(payLoad) {   
+            let addressArray = payLoad.split(",")
+            // this.house = addressArray[0]
+            // this.building = addressArray[1]
+            // this.street = addressArray[2]
+            // this.suburb = addressArray[4]
+            // this.city = addressArray[5]
+            state.line_1 = addressArray[0][0]
+            state.line_2 = addressArray[0][1]
+            state.city = addressArray[5]
+            state.country = addressArray[13]
+        }
 
         return{
             state,
+            addressLookUp,
+            emitAddress,
+            updateAddress
         }
     },
 }
@@ -138,6 +196,11 @@ i{
     border-bottom: 1px solid rgb(182, 179, 179);
 }
 
+#delivery_letter{
+    display: flex;
+    flex-direction: row;
+}
+
 input{
     margin: inherit;
     justify-content: space-evenly;
@@ -175,6 +238,7 @@ input{
 
 #address_text{
     background-color: white;
+    width: 60%;
 }
 
 .address_long{
@@ -210,9 +274,9 @@ button:hover{
     font-weight: 100;
 }
 
-#question_tag{
-    /* margin-left: 1px; */
-}
+/* #question_tag{
+    margin-left: 1px;
+} */
 
 
 .last_div{
