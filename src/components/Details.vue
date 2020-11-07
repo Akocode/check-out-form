@@ -57,7 +57,7 @@
                 </div>
                 <div class="last_div">
                     <div class="confirm_divbtn">
-                        <button id="botton_confirm">CONFIRM DETAILS</button>
+                        <button id="botton_confirm" @click="showModal">CONFIRM DETAILS</button>
                     </div>
                 </div>
         </div>
@@ -65,13 +65,18 @@
             <h5>Payment</h5>
         </div>
     </div>
+    <Modal v-show="state.isModalVisible" @close="closeModal" @save="saveModal"/>
 </template>
 
 <script>
+import Modal from './Modal';
 import { reactive } from 'vue';
 // import {axios} from 'axios';
 export default {
     name: "Details",
+    components: {
+        Modal,
+    },
     setup(ctx){
         const state = reactive({
             postal: '',
@@ -133,11 +138,27 @@ export default {
             state.country = addressArray[13]
         }
 
+        function showModal(){
+            state.isModalVisible = true;
+        }
+
+        function closeModal(){
+            state.isModalVisible = false;
+        }
+
+        function saveModal(){
+            alert("thank you");
+            state.isModalVisible = false;
+        }
+
         return{
             state,
             addressLookUp,
             emitAddress,
-            updateAddress
+            updateAddress,
+            showModal,
+            closeModal,
+            saveModal,
         }
     },
 }

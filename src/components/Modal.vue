@@ -4,10 +4,10 @@
       <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
         <header class="modal-header" id="modalTitle">
           <slot name="header">
-            Summary Of Details
-            <button type="button" class="btn-close" @click="close" aria-label="Close modal">
+            Summary Of Details Provided
+            <!-- <button type="button" class="btn-close" @click="close" aria-label="Close modal">
               x
-            </button>
+            </button> -->
           </slot>
         </header>
         <section class="modal-body" id="modalDescription">
@@ -71,10 +71,10 @@ export default {
     flex-direction: column;
   }
 
-  .modal-header,
-  .modal-footer {
-    padding: 15px;
-    /* display: flex; */
+  /* .modal-footer  */
+  .modal-header{
+    padding: 10px;
+    display: flex;
   }
 
   .modal-header {
@@ -94,7 +94,7 @@ export default {
     padding: 20px 10px;
   }
 
-  .btn-close {
+  /* .btn-close {
     border: none;
     font-size: 20px;
     padding: 20px;
@@ -102,7 +102,7 @@ export default {
     font-weight: bold;
     color: #4AAE9B;
     background: transparent;
-  }
+  } */
 
   .btn-green {
     color: white;

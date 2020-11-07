@@ -14,13 +14,10 @@
     </div>
   </div>
 </div>
-<button type="button" class="btn" @click="showModal"> Open Modal! </button>
-<Modal v-show="state.isModalVisible" @close="closeModal" @save="saveModal"/>
 </template>
 
 <script>
 import { reactive } from 'vue';
-import Modal from './components/Modal';
 import Details from './components/Details';
 import Summary from './components/Summary';
 export default {
@@ -28,7 +25,6 @@ export default {
   components: {
     Details,
     Summary,
-    Modal,
   },
   setup(){
     const state = reactive({
@@ -45,26 +41,9 @@ export default {
       }
     }
 
-    function showModal(){
-      state.isModalVisible = true;
-    }
-
-    function closeModal(){
-      state.isModalVisible = false;
-    }
-
-    function saveModal(){
-      alert("thank you");
-      state.isModalVisible = false;
-    }
-
     return{
       state,
-      editMail,
-      showModal,
-      closeModal,
-      saveModal,
-    }
+      editMail,}
   }
 }
 </script>
