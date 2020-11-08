@@ -65,7 +65,14 @@
             <h5>Payment</h5>
         </div>
     </div>
-    <Modal v-show="state.isModalVisible" @close="closeModal" @save="saveModal"/>
+    <Modal v-show="state.isModalVisible" 
+        @close="closeModal"
+        @save="saveModal" 
+        :first_name = "state.first_name"
+        :last_name = "state.last_name"
+        :number = "state.number"
+        :email = "state.email"
+     />
 </template>
 
 <script>
@@ -140,6 +147,7 @@ export default {
 
         function showModal(){
             state.isModalVisible = true;
+            // state.first_name = 'no name'
         }
 
         function closeModal(){
@@ -147,7 +155,7 @@ export default {
         }
 
         function saveModal(){
-            alert("thank you");
+            alert("Thank you! You can proceed to place your order");
             state.isModalVisible = false;
         }
 

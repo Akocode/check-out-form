@@ -13,10 +13,10 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
               <div class="content">
-                <p>Full Name: <b>Mr Ife Ajayi</b> </p>
+                <p>Full Name: <b>Mr {{first_name}} {{last_name}}</b> </p>
                 <p>Contact Address: <b>Lagos,Nigeria</b> </p>
-                <p>Contact Number: <b>0909767564</b> </p>
-                <p>Email Address: <b>me@me.com</b> </p>
+                <p>Contact Number: <b>{{number}}</b> </p>
+                <p>Email Address: <b>{{email}}</b> </p>
               </div>
           </slot>
         </section>
@@ -39,6 +39,11 @@
 <script>
 export default {
     name: "Modal",
+    props: {
+      first_name: String,
+      last_name: String,
+      number: String,
+    },
     methods: {
         close(){
             this.$emit('close');
