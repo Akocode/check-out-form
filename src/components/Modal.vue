@@ -13,7 +13,7 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
               <div class="content">
-                <p>Full Name: <b>Mr {{first_name}} {{last_name}}</b> </p>
+                <p>Full Name: <b>{{Selectedtitle}} {{first_name}} {{last_name}}</b> </p>
                 <p>Contact Address: <b>Lagos,Nigeria</b> </p>
                 <p>Contact Number: <b>{{number}}</b> </p>
                 <p>Email Address: <b>{{email}}</b> </p>
@@ -43,6 +43,7 @@ export default {
       first_name: String,
       last_name: String,
       number: String,
+      Selectedtitle: String,
     },
     methods: {
         close(){

@@ -32,10 +32,10 @@
             </div>
             <div class="address">
                 <input type="text" placeholder="Input Your Address/Postcode" id="address_text" v-model="state.postcode">
-                <select id="title" v-if="state.postCodeSearched" v-model="state.selectedAddress" v-on:change="emitAddress">
+                <select v-if="state.postCodeSearched" v-model="state.selectedAddress" v-on:change="emitAddress">
                     <option value="" selected>Please select</option>
-                    <option :value="item.summaryline" v-for="(item, index) in state.addressList" :key="index">
-                        {{item.summaryline}}
+                    <option :value="item" v-for="(item, index) in state.addressList" :key="index">
+                        {{item}}
                     </option>
                 </select>
                 <p v-if="state.noResults">Sorry, we were unable to find that post-code</p>
@@ -72,6 +72,7 @@
         :last_name = "state.last_name"
         :number = "state.number"
         :email = "state.email"
+        :Selectedtitle = "state.Selectedtitle"
      />
 </template>
 
@@ -112,11 +113,13 @@ export default {
         });
 
         function addressLookUp(){
-            // var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            // var targetUrl = `https://api.getAddress.io/find/${state.postcode}?api-key=ndnyWw3hkkCuYMDYtpR4VQ28999`
-            fetch(`https://ws.postcoder.com/pcw/PCWZJ-7426G-4FXY3-VRF33/address/uk/${state.postcode}`)
+            // `https://ws.postcoder.com/pcw/PCWZJ-7426G-4FXY3-VRF33/address/uk/${state.postcode}`
+            var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+            var targetUrl = `https://api.getAddress.io/find/${state.postcode}?api-key=ndnyWw3hkkCuYMDYtpR4VQ28999`
+            fetch(proxyUrl + targetUrl)
                 .then(response => { 
                     state.addressList = response.json()
+                    console.log(state.addressList)
                     state.postCodeSearched = true
                     state.noResults = false
             })
@@ -143,11 +146,23 @@ export default {
             state.line_2 = addressArray[0][1]
             state.city = addressArray[5]
             state.country = addressArray[13]
+            // county
+            // number
+            // postcode
+            // posttown
+            // premise
+            // street
+            // summaryline
         }
 
         function showModal(){
-            state.isModalVisible = true;
-            // state.first_name = 'no name'
+            if(state.first_name == '' || state.last_name == '' || state.number){
+                alert('please fill in the form to comfirm your details')
+                state.isModalVisible = false
+            }else{
+                state.isModalVisible = true;
+                // state.first_name = 'no name'
+            }
         }
 
         function closeModal(){
